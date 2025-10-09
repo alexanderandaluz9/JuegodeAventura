@@ -22,6 +22,14 @@ let inventory = [];
 
 // Get player name using readline-sync
 playerName = readline.question("Cual es tu nmbre, aventurero? ");
+// // Check if input is valid using if/else
+if (playerName.trim() === "") {
+    playerName = "Aventurero Desconocido";
+    console.log("No has introducido un nombre. Tu nombre por defecto es 'Aventurero Desconocido'.");
+// Display welcome message and starting stats
+} else {
+    console.log(`Bienvenido, ${playerName}! Que comience la aventura!`);
+}
 
 // Create variables for player stats
 let strength = 10;
@@ -38,8 +46,6 @@ let weaponptions = {
 };
 
 
-// Display welcome message and starting stats
-console.log(`¡Bienvenido, ${playerName}! Tu aventura comienza ahora.`);
 
 
 // Function to display current stats
