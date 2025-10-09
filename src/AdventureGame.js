@@ -39,10 +39,17 @@ let weaponDamage = 0;
 
 // Create variable to track weapon damage
 let weapon = "Puño";
-let weaponptions = {
-    "Espada": 15,
-    "Arco": 12,
-    "Baculo": 10
+let weaponOptions = {
+    "Espada": { daño: 7, costo: 50 },
+    "Arco": { daño: 12, costo: 70 },
+    "Baculo": { daño: 5, costo: 30 },
+    "Daga": { daño: 1, costo: 10 },
+    "Hacha": { daño: 14, costo: 80 },
+    "Lanza": { daño: 15, costo: 90 },
+    "Martillo": { daño: 22, costo: 120 },
+    "Maza": { daño: 32, costo: 150 },
+    "Cimitarra": { daño: 20, costo: 100 },
+    "Tridente": { daño: 21, costo: 110 }
 };
 
 
@@ -68,8 +75,13 @@ let monsterDefense = 5;
 
 // Function to handle combat
 function combat() {
+    if (weapon === "Puño") {
+        console.log("No puedes combatir sin un arma. Regresa a la herreria para comprar una.");
+        return;
+    }
+    else {
     console.log("¡Un monstruo aparece!");
-    let monsterHealth = 50;
+    let monsterHealth = Math.floor(Math.random() * 50) + 50; // Random health between 50-100
     while (monsterHealth > 0 && health > 0) {   
         let action = readline.question("Que quieres hacer? (atacar/hablar/huir): ").toLowerCase();
         if (action === "atacar") {
@@ -83,13 +95,13 @@ function combat() {
                 }
                 if (Math.random() < 0.2) {
                     console.log("¡El monstruo ha dejado caer una arma!");
-                    let droppedWeapon = Object.keys(weaponptions)[Math.floor(Math.random() * Object.keys(weaponptions).length)];
+                    let droppedWeapon = Object.keys(weaponOptions)[Math.floor(Math.random() * Object.keys(weaponOptions).length)];
                     inventory.push(droppedWeapon);
                     console.log(`Has recogido un ${droppedWeapon}.`);
                 }
 
                 console.log("¡Has derrotado al monstruo!");
-                let goldEarned = Math.floor(Math.random() * 20) + 10;
+                let goldEarned = Math.floor(Math.random() * 20) + 30;
                 playerGold += goldEarned;
                 console.log(`Has ganado ${goldEarned} de oro. Oro total: ${playerGold}`);
                 return;
@@ -104,12 +116,13 @@ function combat() {
                 return;
             }
         } else if (action === "hablar") {
-            console.log("Intentas hablar con el monstruo, pero n entiende.");
+            console.log("Intentas hablar con el monstruo, pero no entiende.");
         } else if (action === "huir") {
             console.log("Huyes del combate.");
             return;
         }
     }
+}
 }
 
 
@@ -145,8 +158,8 @@ function visitLocation() {
             console.log("Te adentras en el Bosque.");
             break;
         case "5":
+            location = "Salir";
             gameRunning = false;
-            console.log("Gracias por jugar. ¡Hasta la proxima aventura!");
             break;
         default:
             console.log("Opcion n valida. Permanece en la ubicacion actual.");
@@ -162,19 +175,19 @@ function visitLocation() {
             firstVisit = false;
         }
         console.log("Armas disponibles:");
-        Object.keys(weaponptions).forEach((w, index) => {
-            console.log(`${index + 1}. ${w} (Daño: ${weaponptions[w]}, Costo: 15 oro)`);
+        Object.keys(weaponOptions).forEach((w, index) => {
+            console.log(`${index + 1}. ${w} (Daño: ${weaponOptions[w].daño}, Costo: ${weaponOptions[w].costo} oro)`);
         });
         let weaponChoice = readline.question("Que arma quieres comprar? (numero o 'salir' para salir): ");
         if (weaponChoice.toLowerCase() === "salir") {
             return;
         }
         let weaponIndex = parseInt(weaponChoice) - 1;
-        let selectedWeapon = Object.keys(weaponptions)[weaponIndex];
-        if (selectedWeapon && playerGold >= 15) {
+        let selectedWeapon = Object.keys(weaponOptions)[weaponIndex];
+        if (selectedWeapon && playerGold >= weaponOptions[selectedWeapon].costo) {
             weapon = selectedWeapon;
-            weaponDamage = weaponptions[selectedWeapon];
-            playerGold -= 15;
+            weaponDamage = weaponOptions[selectedWeapon].daño;
+            playerGold -= weaponOptions[selectedWeapon].costo;
             console.log(`Has comprado un ${weapon}. Tu oro restante: ${playerGold}`);
         } else {
             console.log("no tienes suficiente oro o la opcion es invalida.");
@@ -197,6 +210,9 @@ function visitLocation() {
             health = Math.min(100, health + 20);
             console.log(`Has descansado y recuperado salud. Salud actual: ${health}`);
         }
+    } else if (location === "Salir") {
+        gameRunning = false;
+        console.log("Gracias por jugar. ¡Hasta la proxima aventura!");
     }
 }
 
@@ -232,9 +248,11 @@ while (gameRunning) {
         console.log("Has perdido toda tu salud. Fin del juego.");
         gameRunning = false;
     }
+    if (health > 0 && gameRunning) {
     let continueChoice = readline.question("Quieres continuar jugando? (s/n): ").toLowerCase();
     if (continueChoice !== "s") {
         gameRunning = false;
         console.log("Gracias por jugar. ¡Hasta la proxima aventura!");
     }
 } 
+}
