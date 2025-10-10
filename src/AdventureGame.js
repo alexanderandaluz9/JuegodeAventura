@@ -1,9 +1,10 @@
 /*
 La Epica Hora de Aventura
-Juego desarrollado por Alexander Andaluz
+Game developed by Alexander Andaluz
 Utilizando el Lenguaje "JavaScript" 2025
 */
 
+// Section Import Readline-Sync
 const readline = require("readline-sync");
 
 
@@ -12,6 +13,9 @@ console.log("Bienvenido al juego de Aventura")
 
 // Welcome
 console.log("Preparate para una aventura epica")
+
+
+// Section Game Variables
 
 let playerName = "";
 let health = 100;
@@ -54,6 +58,7 @@ let weaponOptions = {
 
 
 
+ // Section Game Functions
 
 // Function to display current stats
 function displayStats() {
@@ -125,10 +130,13 @@ function combat() {
 }
 }
 
+ /**
+    * Combat function where player can fight monsters
+    * @param {string} action - The action chosen by the player (attack, talk, flee)
+    * @returns {void} - No return value
+    */
 
 
-// Set healing potion restoration value
-let healingPotionValue = 30;
 
 
 //location village, blacksmith, market, forest
@@ -139,6 +147,7 @@ function visitLocation() {
     console.log("3. Mercado");
     console.log("4. Bosque");
     console.log("5. Salir del juego");
+    console.log("6. Ayuda");
     let choice = readline.question("Elige una opcion (1-5): ");
     switch (choice) {
         case "1":
@@ -161,8 +170,11 @@ function visitLocation() {
             location = "Salir";
             gameRunning = false;
             break;
+        case "6":
+            showHelp();
+            break;
         default:
-            console.log("Opcion n valida. Permanece en la ubicacion actual.");
+            console.log("Opcion no valida. Permanece en la ubicacion actual.");
             return
     }
 
@@ -216,6 +228,18 @@ function visitLocation() {
     }
 }
 
+ /**
+    * location function where player can visit different places
+    * @param {string} location - The location chosen by the player (village, blacksmith, market, forest)
+    * @returns {void} - No return value
+    */ 
+     
+
+
+// Section Healing Potion
+// Set healing potion restoration value
+let healingPotionValue = 30;
+
  // Create for loop to check inventory slots
 function usePotion(){
  for (let i = 0; i < inventory.length; i++) {
@@ -230,20 +254,37 @@ function usePotion(){
     }
  }
  };
- 
+  /**
+    * Potion function where player can use health potions
+    * @param {string} usePotion - The choice to use a potion (yes/no)
+    * @returns {void} - No return value
+    * */
+
 
             
 
 
+// Section Intial Game Loop
+function showHelp() {   
+    console.log("\nComo Jugar el juego:");
+    console.log("1. Visita diferentes ubicaciones para explorar y encontrar desafios.");
+    console.log("2. Compra armas en la herreria para mejorar tu capacidad de combate.");
+    console.log("3. Compra pociones de salud en el mercado para restaurar tu salud.");
+    console.log("4. Enfrentate a monstruos en el bosque para ganar oro y botin.");
+    console.log("5. Usa pociones de salud de tu inventario para recuperar salud cuando sea necesario.");
+    console.log("6. Descansa en la aldea para recuperar salud.");
+    console.log("7. Mantente atento a tu salud y oro para sobrevivir y prosperar en tu aventura.");
+    console.log("8. Diviertete y disfruta de la aventura epica!\n");
+}
 
 
-// Initial Game
+// Main game loop
 gameRunning = true;
 while (gameRunning) {
     displayStats();
     visitLocation();
     usePotion();
-    
+    // Check for game over condition
     if (health <= 0) {
         console.log("Has perdido toda tu salud. Fin del juego.");
         gameRunning = false;
@@ -256,3 +297,4 @@ while (gameRunning) {
     }
 } 
 }
+// End of Game Loop
